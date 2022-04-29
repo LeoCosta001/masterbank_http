@@ -13,20 +13,23 @@ class Dashboard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Image.asset('assets/images/logo/masterbank_main_logo.jpg'),
-          Row(
-            children: <Widget>[
-              _FeatureItem(
-                'Transfer',
-                Icons.monetization_on,
-                onClick: () => _goToContactList(context),
-              ),
-              _FeatureItem(
-                'Transfer2',
-                Icons.monetization_on,
-                onClick: () => print('Transaction feed is clicked'),
-              ),
-            ],
-          )
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: <Widget>[
+                _FeatureItem(
+                  'Transfer',
+                  Icons.monetization_on,
+                  onClick: () => _goToContactList(context),
+                ),
+                _FeatureItem(
+                  'Transfer2',
+                  Icons.monetization_on,
+                  onClick: () => print('Transaction feed is clicked'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
