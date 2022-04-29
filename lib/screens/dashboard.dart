@@ -14,9 +14,17 @@ class Dashboard extends StatelessWidget {
         children: <Widget>[
           Image.asset('assets/images/logo/masterbank_main_logo.jpg'),
           Row(
-            children: const <Widget>[
-              _FeatureItem('Transfer', Icons.monetization_on),
-              _FeatureItem('Transfer2', Icons.monetization_on),
+            children: <Widget>[
+              _FeatureItem(
+                'Transfer',
+                Icons.monetization_on,
+                onClick: () => _goToContactList(context),
+              ),
+              _FeatureItem(
+                'Transfer2',
+                Icons.monetization_on,
+                onClick: () => print('Transaction feed is clicked'),
+              ),
             ],
           )
         ],
@@ -25,11 +33,20 @@ class Dashboard extends StatelessWidget {
   }
 }
 
+void _goToContactList(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => ContactsList(),
+    ),
+  );
+}
+
 class _FeatureItem extends StatelessWidget {
   final String _name;
   final IconData _icon;
+  final Function onClick;
 
-  const _FeatureItem(this._name, this._icon);
+  const _FeatureItem(this._name, this._icon, {required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +55,7 @@ class _FeatureItem extends StatelessWidget {
       child: Material(
         color: Theme.of(context).primaryColor,
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ContactsList(),
-              ),
-            );
-          },
+          onTap: () => onClick(),
           child: Container(
             padding: const EdgeInsets.all(8.0),
             height: 100,
