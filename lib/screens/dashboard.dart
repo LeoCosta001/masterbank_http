@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:masterbank/screens/contacts_list.dart';
+import 'package:masterbank/screens/transactions_list.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -23,9 +24,9 @@ class Dashboard extends StatelessWidget {
                   onClick: () => _goToContactList(context),
                 ),
                 _FeatureItem(
-                  'Transfer2',
-                  Icons.monetization_on,
-                  onClick: () => print('Transaction feed is clicked'),
+                  'Transaction feed',
+                  Icons.description,
+                  onClick: () => _goToTransactionsList(context),
                 ),
               ],
             ),
@@ -43,6 +44,15 @@ void _goToContactList(BuildContext context) {
     ),
   );
 }
+
+void _goToTransactionsList(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => TransactionsList(),
+    ),
+  );
+}
+
 
 class _FeatureItem extends StatelessWidget {
   final String _name;
