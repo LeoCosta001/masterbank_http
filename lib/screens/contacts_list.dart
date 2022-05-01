@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masterbank/database/dao/contact_dao.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
+import 'package:masterbank/widgets/loading_page.dart';
 
 class ContactsList extends StatefulWidget {
   @override
@@ -25,25 +26,7 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const CircularProgressIndicator(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Text(
-                        'Loading...',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
+              return LoadingPage();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
