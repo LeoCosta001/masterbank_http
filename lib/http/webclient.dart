@@ -9,7 +9,9 @@ Future<List<Transaction>> getTransactionsList() async {
   final Client client = InterceptedClient.build(interceptors: [LoggingInterceptor()]);
 
   // Caso esteja usando um servidor local é nescessário usar o IP da mesma rede
-  final Response response = await client.get(Uri.parse('http://192.168.0.6:8080/transactions'));
+  final Response response = await client
+      .get(Uri.parse('http://192.168.0.6:8080/transactions'))
+      .timeout(const Duration(seconds: 15));
 
   final List<dynamic> decodedJson = jsonDecode(response.body);
   final List<Transaction> transactions = [];
