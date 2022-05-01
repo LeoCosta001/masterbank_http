@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masterbank/database/dao/contact_dao.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
+import 'package:masterbank/widgets/centered_message.dart';
 import 'package:masterbank/widgets/loading_page.dart';
 
 class ContactsList extends StatefulWidget {
@@ -40,7 +41,11 @@ class _ContactsListState extends State<ContactsList> {
                   itemCount: contactList.length,
                 );
               }
-              return const Text('Unknown error!');
+              return CenteredMessage(
+                'Unknown error!',
+                icon: Icons.error,
+                color: Theme.of(context).errorColor,
+              );
           }
           return Container();
         },
