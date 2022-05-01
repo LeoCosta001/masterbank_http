@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:masterbank/http/webclient.dart';
 import 'package:masterbank/models/contact.dart';
+import 'package:masterbank/models/transaction.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -54,7 +56,15 @@ class _TransactionFormState extends State<TransactionForm> {
                   width: double.maxFinite,
                   child: ElevatedButton(
                     child: const Text('Transfer'),
-                    onPressed: () {},
+                    onPressed: () {
+                      final double? value = double.tryParse(_valueController.text);
+                      final transactionCreated = Transaction(value ?? 0, widget.contact);
+                      postTransaction(transactionCreated).then((Transaction? transaction) {
+                        if (transaction != null) {
+                          Navigator.pop(context);
+                        }
+                      });
+                    },
                   ),
                 ),
               )
