@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masterbank/database/dao/contact_dao.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/screens/contacts_form.dart';
+import 'package:masterbank/screens/transaction_form.dart';
 import 'package:masterbank/widgets/centered_message.dart';
 import 'package:masterbank/widgets/loading_page.dart';
 
@@ -36,7 +37,11 @@ class _ContactsListState extends State<ContactsList> {
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     final Contact contact = contactList[index];
-                    return _ContactItem(contact);
+                    return _ContactItem(contact, onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => TransactionForm(contact)),
+                      );
+                    });
                   },
                   itemCount: contactList.length,
                 );
@@ -128,13 +133,18 @@ class _ContactsListState extends State<ContactsList> {
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onClick;
 
-  const _ContactItem(this.contact);
+  const _ContactItem(
+    this.contact, {
+    required this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           contact.accountName,
           style: const TextStyle(fontSize: 24.0),
