@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:masterbank/http/webclient.dart';
+import 'package:masterbank/http/webclient/transaction_webclient.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/models/transaction.dart';
 
@@ -14,6 +14,7 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
+  final TransactionWebClient _transactionWebClient = TransactionWebClient();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     onPressed: () {
                       final double? value = double.tryParse(_valueController.text);
                       final transactionCreated = Transaction(value ?? 0, widget.contact);
-                      postTransaction(transactionCreated).then((Transaction? transaction) {
+                      _transactionWebClient.postTransaction(transactionCreated).then((Transaction? transaction) {
                         if (transaction != null) {
                           Navigator.pop(context);
                         }

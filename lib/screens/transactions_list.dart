@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:masterbank/http/webclient.dart';
+import 'package:masterbank/http/webclient/transaction_webclient.dart';
 import 'package:masterbank/models/transaction.dart';
 import 'package:masterbank/widgets/centered_message.dart';
 import 'package:masterbank/widgets/loading_page.dart';
 
 class TransactionsList extends StatelessWidget {
+  final TransactionWebClient _transactionWebClient = TransactionWebClient();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Transactions')),
       body: FutureBuilder<List<Transaction>>(
         initialData: const [],
-        future: getTransactionsList(),
+        future: _transactionWebClient.getTransactionList(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
