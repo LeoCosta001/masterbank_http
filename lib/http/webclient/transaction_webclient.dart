@@ -14,13 +14,14 @@ class TransactionWebClient {
         .toList();
   }
 
-  Future<Transaction> postTransaction(Transaction transaction) async {
+  Future<Transaction> postTransaction(Transaction transaction, String password) async {
     final String transactionJson = jsonEncode(transaction.toJson());
 
     final Response response = await client
         .post(
           Uri.parse(baseUrl),
-          headers: {'Content-Type': 'application/json', 'password': '1000'},
+          // O password ainda precisa ser 1000 mas agora o usuário precisa digitar
+          headers: {'Content-Type': 'application/json', 'password': password},
           body: transactionJson,
         )
         .timeout(const Duration(seconds: 15));

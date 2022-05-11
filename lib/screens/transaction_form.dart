@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masterbank/http/webclient/transaction_webclient.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/models/transaction.dart';
+import 'package:masterbank/widgets/transaction_auth_dialog.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -60,11 +61,17 @@ class _TransactionFormState extends State<TransactionForm> {
                     onPressed: () {
                       final double? value = double.tryParse(_valueController.text);
                       final transactionCreated = Transaction(value ?? 0, widget.contact);
-                      _transactionWebClient.postTransaction(transactionCreated).then((Transaction? transaction) {
-                        if (transaction != null) {
-                          Navigator.pop(context);
-                        }
-                      });
+                      showDialog(
+                        context: context,
+                        // OBS: O "Context" deste "builder" precisa ter um nome diferente do "Context" do widget
+                        builder: (contextDialog) {
+                          return TransactionAuthDialog(
+                            onConfirm: (String password) {
+                              _sendTransaction(transactionCreated, password, context);
+                            },
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
@@ -74,5 +81,19 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  void _sendTransaction(
+    Transaction transactionCreated,
+    String password,
+    BuildContext context,
+  ) async {
+    _transactionWebClient
+        .postTransaction(transactionCreated, password)
+        .then((Transaction? transaction) {
+      if (transaction != null) {
+        Navigator.pop(context);
+      }
+    });
   }
 }
