@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:masterbank/http/webclient/transaction_webclient.dart';
 import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/models/transaction.dart';
+import 'package:masterbank/widgets/response_dialog.dart';
 import 'package:masterbank/widgets/transaction_auth_dialog.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -88,12 +89,24 @@ class _TransactionFormState extends State<TransactionForm> {
     String password,
     BuildContext context,
   ) async {
-    _transactionWebClient
-        .postTransaction(transactionCreated, password)
-        .then((Transaction? transaction) {
-      if (transaction != null) {
-        Navigator.pop(context);
-      }
-    });
+    _transactionWebClient.postTransaction(transactionCreated, password).then(
+      (Transaction? transaction) {
+        if (transaction != null) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return SuccessDialog('Successful transaction');
+              }).then((value) => Navigator.pop(context));
+        }
+      },
+    ).catchError((error) {
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog(error.message);
+          });
+      // Verifica se o tipo de erro esperado é um Exception
+      // Se o return for "false" então o "catchError" não será executado)
+    }, test: (error) => error is Exception);
   }
 }

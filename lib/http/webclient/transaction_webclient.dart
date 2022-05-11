@@ -26,6 +26,15 @@ class TransactionWebClient {
         )
         .timeout(const Duration(seconds: 15));
 
+    // Verifica o Status code da resposta e emite um Exception error com uma mensagem especifica para ser tratado pelo "catchError(...)"
+    if (response.statusCode == 400) {
+      throw Exception('Error on submit transaction');
+    } else if (response.statusCode == 401) {
+      throw Exception('Authentication failed');
+    } else if (response.statusCode != 200) {
+      throw Exception('Error');
+    }
+
     return Transaction.fromJson(jsonDecode(response.body));
   }
 }
