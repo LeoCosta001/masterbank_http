@@ -6,6 +6,7 @@ import 'package:masterbank/models/contact.dart';
 import 'package:masterbank/models/transaction.dart';
 import 'package:masterbank/widgets/response_dialog.dart';
 import 'package:masterbank/widgets/transaction_auth_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -19,6 +20,7 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _transactionWebClient = TransactionWebClient();
+  final String transactionId = const Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     child: const Text('Transfer'),
                     onPressed: () {
                       final double? value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transaction(value ?? 0, widget.contact);
+                      final transactionCreated = Transaction(transactionId , value ?? 0, widget.contact);
                       showDialog(
                         context: context,
                         // OBS: O "Context" deste "builder" precisa ter um nome diferente do "Context" do widget
