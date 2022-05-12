@@ -32,7 +32,15 @@ class TransactionWebClient {
     }
 
     // Retorna um erro com uma mensagem especifica
-    throw HttpException(_statusCodeResponse[response.statusCode]);
+    throw HttpException(_getMessage(response.statusCode));
+  }
+
+  String? _getMessage(int statusCode) {
+    if (_statusCodeResponse.containsKey(statusCode)) {
+     return _statusCodeResponse[statusCode];
+    }
+
+    return 'Unknown error';
   }
 
   static final Map<int, String?> _statusCodeResponse = {

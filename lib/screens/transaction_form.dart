@@ -124,9 +124,7 @@ class _TransactionFormState extends State<TransactionForm> {
       // Se o return for "false" então o "catchError" não será executado)
     }, test: (error) => error is HttpException).catchError((error) {
       _showFailureDialog(context, message: 'Timeout submitting the transaction');
-    }, test: (error) => error is SocketException).catchError((error) {
-      _showFailureDialog(context);
-    });
+    }, test: (error) => error is SocketException);
     return transaction;
   }
 
