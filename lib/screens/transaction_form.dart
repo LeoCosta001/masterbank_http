@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:masterbank/http/webclient/transaction_webclient.dart';
 import 'package:masterbank/models/contact.dart';
@@ -89,24 +91,48 @@ class _TransactionFormState extends State<TransactionForm> {
     String password,
     BuildContext context,
   ) async {
-    _transactionWebClient.postTransaction(transactionCreated, password).then(
-      (Transaction? transaction) {
-        if (transaction != null) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return SuccessDialog('Successful transaction');
-              }).then((value) => Navigator.pop(context));
-        }
-      },
-    ).catchError((error) {
-      showDialog(
+    Transaction transaction = await _send(
+      transactionCreated,
+      password,
+      context,
+    );
+
+    _showSuccessfulMessage(transaction, context);
+  }
+
+  Future<void> _showSuccessfulMessage(Transaction transaction, BuildContext context) async {
+    if (transaction != null) {
+      await showDialog(
           context: context,
-          builder: (contextDialog) {
-            return FailureDialog(error.message);
+          builder: (context) {
+            return SuccessDialog('Successful transaction');
           });
-      // Verifica se o tipo de erro esperado é um Exception
+      Navigator.pop(context);
+    }
+  }
+
+  Future<Transaction> _send(
+      Transaction transactionCreated, String password, BuildContext context) async {
+    final Transaction transaction = await _transactionWebClient
+        .postTransaction(transactionCreated, password)
+        .catchError((error) {
+      _showFailureDialog(context, message: error.message);
+
+      // Verifica se o tipo de erro esperado é um HttpException
       // Se o return for "false" então o "catchError" não será executado)
-    }, test: (error) => error is Exception);
+    }, test: (error) => error is HttpException).catchError((error) {
+      _showFailureDialog(context, message: 'Timeout submitting the transaction');
+    }, test: (error) => error is SocketException).catchError((error) {
+      _showFailureDialog(context);
+    });
+    return transaction;
+  }
+
+  void _showFailureDialog(BuildContext context, {String message = 'Unknown error'}) {
+    showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return FailureDialog(message);
+        });
   }
 }
